@@ -2,9 +2,7 @@ package application;
 	
 import javafx.application.Application;
 import javafx.stage.Stage;
-import scene.LoginScene;
-import scene.ProfesorScene;
-import scene.UcenikScene;
+import scene.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
