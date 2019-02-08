@@ -1,5 +1,6 @@
 package scene;
 
+import crud.Crud;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,12 +14,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import klase.Razred;
+import klase.Ucenik;
+
+import java.util.List;
 
 public class ProfesorScene extends Scene
 {
+	private ListView<String> predmeti;
+	private ListView<String> ucenici;
+	private Ucenik ucenik ;
+
 	private class PogledajRazredHandler implements EventHandler<MouseEvent> {
-		ListView<String> razredi;
-		ProfesorScene parent;
+		private ListView<String> razredi;
+		private ProfesorScene parent;
 
 		public PogledajRazredHandler(ListView<String> razredi, ProfesorScene parent) {
 			this.razredi = razredi;
@@ -31,8 +40,7 @@ public class ProfesorScene extends Scene
 
 			{
 				String razred = razredi.getSelectionModel().getSelectedItem();
-				//to do search base by razred;
-				parent.setRoot(getRazredPane());
+				parent.setRoot(getRazredPane(razred));
 			}
 		}
 	}
@@ -43,7 +51,11 @@ public class ProfesorScene extends Scene
 		{
 			if((event.getSource() instanceof  Button) || (event.getSource() instanceof ListView && event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2))
 			{
-				Scene ucenik = new UcenikScene();
+				String ucenikInfo = ucenici.getSelectionModel().getSelectedItem();
+				String ucenikInfos[] = ucenikInfo.split(" ");
+				Crud c = new Crud();
+				Ucenik ucenikSelected = c.findUcenik(ucenikInfos[0], ucenikInfos[1]);
+				Scene ucenik = new UcenikScene(ucenikSelected);
 				Stage ucenikStage = new Stage();
 				ucenikStage.setScene(ucenik);
 				ucenikStage.initModality(Modality.APPLICATION_MODAL);
@@ -56,7 +68,11 @@ public class ProfesorScene extends Scene
 		@Override
 		public void handle(MouseEvent event) {
 			Stage oceneStage = new Stage();
-			Scene upisOcene = new OceniScene(oceneStage);
+			String ucenikInfo = ucenici.getSelectionModel().getSelectedItem();
+			String ucenikInfos[] = ucenikInfo.split(" ");
+			Crud c = new Crud();
+			ucenik = c.findUcenik(ucenikInfos[0], ucenikInfos[1]);
+			Scene upisOcene = new OceniScene(oceneStage, ucenik);
 			oceneStage.setScene(upisOcene);
 			oceneStage.initModality(Modality.APPLICATION_MODAL);
 			oceneStage.showAndWait();
@@ -67,7 +83,11 @@ public class ProfesorScene extends Scene
 		@Override
 		public void handle(MouseEvent event) {
 			Stage oceneStage = new Stage();
-			Scene upisOcene = new IzostanakScene(oceneStage);
+			String ucenikInfo = ucenici.getSelectionModel().getSelectedItem();
+			String ucenikInfos[] = ucenikInfo.split(" ");
+			Crud c = new Crud();
+			ucenik = c.findUcenik(ucenikInfos[0], ucenikInfos[1]);
+			Scene upisOcene = new IzostanakScene(oceneStage, ucenik);
 			oceneStage.setScene(upisOcene);
 			oceneStage.initModality(Modality.APPLICATION_MODAL);
 			oceneStage.showAndWait();
@@ -87,13 +107,20 @@ public class ProfesorScene extends Scene
 	{
 		BorderPane pane = new BorderPane();
 		// DUMMY
-		String[] dummy = {"razred 1", "razred 2", "razred 3", "razred 4"};
+		Crud c = new Crud();
+		List<Razred> razredi = c.listRazred();
+		Razred[] razredNiz = (Razred[])razredi.toArray();
+		String[] razredIme = new String[razredi.size()];
+		for(int i=0;i<razredi.size();i++){
+			razredIme[i] = razredNiz[i].getGodina() + "-" + razredNiz[i].getOdelenje();
+ 		}
+		//String[] dummy = {"razred 1", "razred 2", "razred 3", "razred 4"};
 		// DUMMY
 
-		ListView<String> predmeti = new ListView<String>();
+		predmeti = new ListView<String>();
 		EventHandler<MouseEvent> handler = new PogledajRazredHandler(predmeti, this);
 		predmeti.setOnMouseClicked(handler);
-		predmeti.getItems().addAll(dummy);
+		predmeti.getItems().addAll(razredIme);
 		pane.setCenter(predmeti);
 		BorderPane.setMargin(predmeti, new Insets(75, 50,0,50));
 		Button razred = new Button("Pregledaj razred");
@@ -103,16 +130,23 @@ public class ProfesorScene extends Scene
 		BorderPane.setAlignment(razred, Pos.TOP_CENTER);
 		return pane;
 	}
-	public Pane getRazredPane()
+	public Pane getRazredPane(String razred)
 	{
 		BorderPane pane = new BorderPane();
 		// DUMMY
-		String[] dummy = {"ucenik 1", "ucenik 2", "ucenik 3", "ucenik 4", "ucenik 5", "ucenik 6", "ucenik 7", "ucenik 8"};
+		Crud c = new Crud();
+		Ucenik[] nizUcenika= (Ucenik [])c.listRazredUcenici(razred).toArray();
+		String[] imenaUcenika = new String[nizUcenika.length];
+		for(int i=0; i<nizUcenika.length;i++){
+			imenaUcenika[i] = nizUcenika[i].getRazred() + " " + nizUcenika[i].getRedniBroj() + " " +
+					nizUcenika[i].getIme() + " " + nizUcenika[i].getPrezime();
+		}
+//		String[] dummy = {"ucenik 1", "ucenik 2", "ucenik 3", "ucenik 4", "ucenik 5", "ucenik 6", "ucenik 7", "ucenik 8"};
 		// DUMMY
 
-		ListView<String> ucenici = new ListView<String>();
+		ucenici = new ListView<String>();
 		ucenici.setOnMouseClicked(new ProfilUcenikaHandler());
-		ucenici.getItems().addAll(dummy);
+		ucenici.getItems().addAll(imenaUcenika);
 		pane.setCenter(ucenici);
 		BorderPane.setMargin(ucenici, new Insets(75, 50,0,50));
 		Button pregledaj = new Button("Profil ucenika");

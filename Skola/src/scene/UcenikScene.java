@@ -4,6 +4,7 @@ package scene;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import crud.Crud;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,14 +28,27 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import klase.Ocene;
+import klase.Predmeti;
+import klase.Ucenik;
 
 public class UcenikScene extends Scene
 {
+	private Ucenik ucenik;
+
 	public UcenikScene()
 	{
 		super(new BorderPane(), 800, 600);
 		this.setRoot(getPane());
 	}
+
+	public UcenikScene(Ucenik ucenik)
+	{
+		super(new BorderPane(), 800, 600);
+		this.setRoot(getPane());
+		this.ucenik= ucenik;
+	}
+
 	public UcenikScene(double width, double hight)
 	{
 		super(new BorderPane(), width, hight);
@@ -59,10 +73,41 @@ public class UcenikScene extends Scene
 	
 	protected Pane getProfilPane()
 	{
-		BorderPane pane = new BorderPane();
-		// TO-DO
-		pane.setCenter(new Rectangle(200,200,javafx.scene.paint.Color.AZURE));
-		pane.setBottom(new Rectangle(800,200,javafx.scene.paint.Color.ANTIQUEWHITE));
+		GridPane pane = new GridPane();
+		pane.setPadding(new Insets(10, 10, 10, 10));
+		pane.setVgap(5);
+		pane.setHgap(5);
+
+		Label imeLabel = new Label("ime:");
+		Label imeOcaLabel = new Label("srednje ime:");
+		Label prezimeLabel = new Label("prezime:");
+		Label datumRodjenjaLabel = new Label("datum rodjenja:");
+		Label mestoLabel = new Label("mesto prebavalista:");
+		Label brojTelefonaLabel = new Label("broj telefona:");
+		Label razredLabel = new Label("razred:");
+
+		Label imeInfo = new Label(ucenik.getIme());
+		Label imeOcaInfo = new Label(ucenik.getImeOca());
+		Label prezimeInfo = new Label(ucenik.getPrezime());
+		Label datumRodjenjaInfo = new Label(ucenik.getDatumRodjenja().toString());
+		Label mestoInfo = new Label(ucenik.getMestoPrebivalista());
+		Label brojTelefonaInfo = new Label(ucenik.getBrojTelefona());
+		Label razredInfo = new Label(ucenik.getRazred());
+
+		pane.add(imeLabel, 0, 0);
+		pane.add(imeInfo, 0, 1);
+		pane.add(prezimeLabel,1,0);
+		pane.add(prezimeInfo,1,1);
+		pane.add(imeOcaLabel,2,0);
+		pane.add(imeOcaInfo,2,1);
+		pane.add(razredLabel,3,0);
+		pane.add(razredInfo,3,1);
+		pane.add(datumRodjenjaLabel,0,2);
+		pane.add(datumRodjenjaInfo,0,3);
+		pane.add(mestoLabel,1,2);
+		pane.add(mestoInfo,1,3);
+		pane.add(brojTelefonaLabel,2,2);
+		pane.add(brojTelefonaInfo,2,3);
 		// To-DO
 		return pane;
 	}
@@ -92,14 +137,31 @@ public class UcenikScene extends Scene
 		BorderPane pane = new BorderPane();
 				
 		// DUMMY
-		String[] predmeti = {"Predmet1","Predmet2","Predmet3","Predmet4"};
-		int[][] ocene = {{3,4,5,5,4},
-						 {5,5,5,5},
-						 {3,2,4,5},
-						 {2,2,3,2}
-		};
+		Crud c = new Crud();
+
+		//sortirana u crudu
+		Predmeti[] predmeti = (Predmeti[]) c.listPredmeti().toArray();
+		String[] predmetiIme = new String[predmeti.length];
+		for(int i = 0; i< predmeti.length; i++){
+			predmetiIme[i]=predmeti[i].getNazivPredmeta();
+		}
+		//String[] predmeti = {"Predmet1","Predmet2","Predmet3","Predmet4"};
+//		int[][] ocene = {{3,4,5,5,4},
+//						 {5,5,5,5},
+//						 {3,2,4,5},
+//						 {2,2,3,2}
+//		};
+		long[][] ocene = new long[predmeti.length][20];
+		//idp ide od 0-x
+		for(int i = 0; i< predmeti.length; i++){
+			Ocene[] oceneIzPredmeta = (Ocene[]) c.oceneIzPredmeta(i, ucenik).toArray();
+			for(int j = 0; j < oceneIzPredmeta.length;j++){
+				ocene[i][j] = oceneIzPredmeta[j].getOcena();
+			}
+		}
+
 		// DUMMY
-		
+
 		double[] avarage = racunajProsek(ocene);
 		GridPane container = new GridPane();
 		for(int i =0; i < predmeti.length;i++)
@@ -140,10 +202,10 @@ public class UcenikScene extends Scene
 		}
 		return sum/broj;
 	}
-	private static String oceneToString(int[] ocene)
+	private static String oceneToString(long[] ocene)
 	{
 		StringBuilder sb = new StringBuilder();
-		for(int ocena:ocene)
+		for(long ocena:ocene)
 		{
 			sb.append(ocena);
 			sb.append(", ");
@@ -151,14 +213,14 @@ public class UcenikScene extends Scene
 		sb.deleteCharAt(sb.length()-2);
 		return sb.toString();
 	}
-	private static double[] racunajProsek(int[][] ocene)
+	private static double[] racunajProsek(long[][] ocene)
 	{
 		double[] prosek = new double[ocene.length];
 		for(int i =0;i < ocene.length;i++)
 		{
 			double sum =0;
 			int broj =0;
-			for(int ocena: ocene[i])
+			for(long ocena: ocene[i])
 			{
 				sum+=ocena;
 				broj++;
