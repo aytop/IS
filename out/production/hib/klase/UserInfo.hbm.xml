@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="klase.UserInfo" table="User_info" schema="public" catalog="is1_projekat_baza">
+        <id name="username">
+            <column name="username" sql-type="text"/>
+        </id>
+        <property name="password">
+            <column name="password" sql-type="text"/>
+        </property>
+        <property name="uloga">
+            <column name="uloga" sql-type="bigint"/>
+        </property>
+    </class>
+</hibernate-mapping>

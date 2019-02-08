@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/is1_projekat_baza</property>
+        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <mapping resource="book.hbm.xml" />
+        <mapping class="klase.Izostanak"/>
+        <mapping class="klase.Napomena"/>
+        <mapping class="klase.Ocene"/>
+        <mapping class="klase.Predmeti"/>
+        <mapping class="klase.Profesor"/>
+        <mapping class="klase.Razred"/>
+        <mapping class="klase.RazredniStaresina"/>
+        <mapping class="klase.Roditelj"/>
+        <mapping class="klase.Ucenik"/>
+        <mapping class="klase.Uloga"/>
+        <mapping class="klase.UserInfo"/>
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="klase.Napomena" table="Napomena" schema="public" catalog="is1_projekat_baza">
+        <id name="idn">
+            <column name="idn" sql-type="bigint"/>
+        </id>
+        <property name="razredDjaka">
+            <column name="razred_djaka" sql-type="bigint"/>
+        </property>
+        <property name="redniBrojDjaka">
+            <column name="redni_broj_djaka" sql-type="bigint"/>
+        </property>
+        <property name="opis">
+            <column name="opis" sql-type="text"/>
+        </property>
+        <property name="idp">
+            <column name="idp" sql-type="bigint"/>
+        </property>
+        <property name="datum">
+            <column name="datum" sql-type="date"/>
+        </property>
+    </class>
+</hibernate-mapping>

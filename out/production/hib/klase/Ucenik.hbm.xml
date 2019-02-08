@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="klase.Ucenik" table="Ucenik" schema="public" catalog="is1_projekat_baza">
+        <composite-id mapped="true" class="klase.UcenikPK">
+            <key-property name="redniBroj">
+                <column name="redni_broj" sql-type="bigint"/>
+            </key-property>
+            <key-property name="razred">
+                <column name="razred" sql-type="text"/>
+            </key-property>
+        </composite-id>
+        <property name="ime">
+            <column name="ime" sql-type="text"/>
+        </property>
+        <property name="imeOca">
+            <column name="ime_oca" sql-type="text" not-null="true"/>
+        </property>
+        <property name="prezime">
+            <column name="prezime" sql-type="text"/>
+        </property>
+        <property name="datumRodjenja">
+            <column name="datum_rodjenja" sql-type="date"/>
+        </property>
+        <property name="mestoPrebivalista">
+            <column name="mesto_prebivalista" sql-type="text" not-null="true"/>
+        </property>
+        <property name="brojTelefona">
+            <column name="broj_telefona" sql-type="text" not-null="true"/>
+        </property>
+        <property name="username">
+            <column name="username" sql-type="text"/>
+        </property>
+    </class>
+</hibernate-mapping>

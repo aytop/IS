@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="klase.RazredniStaresina" table="Razredni_staresina" schema="public" catalog="is1_projekat_baza">
+        <id name="mbr">
+            <column name="mbr" sql-type="bigint"/>
+        </id>
+        <property name="idr">
+            <column name="idr" sql-type="text"/>
+        </property>
+    </class>
+</hibernate-mapping>
